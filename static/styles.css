@@ -33,6 +33,19 @@ label {
     display: block;
     margin-top: 10px;
 }
+button {
+    background-color: #456;
+    color: #eee;
+    font-size: 1em;
+    border: none;
+    border-radius: 0.5em;
+    cursor: pointer;
+    padding: 0.5em;
+}
+button:hover {
+    text-shadow: 1px 1px #000;
+}
+
 
 .header_home {
     display: inline-block;
