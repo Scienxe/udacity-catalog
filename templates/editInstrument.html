@@ -1,0 +1,52 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+    <div class="row divider green">
+        <div class="col-md-12"></div>
+    </div>
+    <div class="row banner menu">
+        <div class="col-md-11 col-md-offset-1 padding-none">
+            <h1>{% if instrument_id == None %}New{% else %}Edit{% endif %} Instrument</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1 padding-top">
+            {% if instrument.id == None %}
+            <form action="{{ url_for('newInstrumentWithCategory', category_id=category_id) }}" method="post">
+            {% else %}
+            <form action="{{ url_for('editInstrument', category_id=category_id, instrument_id=instrument.id) }}" method = "post">
+            {% endif %}
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type ="text" maxlength="100" class="form-control" name="name" value="{% if instrument %}{{ instrument.name }}{% endif %}">
+
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" maxlength="250" rows="3" name="description">{% if instrument %}{{ instrument.description }}{% endif %}</textarea>
+
+                    <label for="price">Price:</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type ="text" maxlength="10" class="form-control" name="price" value="{% if instrument %}{{ instrument.price }}{% endif %}">
+                    </div>
+                    <label for="category">Category:</label>
+                    <select name="category_id">
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}"{% if instrument and instrument.category_id == cat.id %} selected{% endif %}>{{cat.name}}</option>
+                    {% endfor %}
+                    </select>
+
+                    <input type="hidden" name="picture" value="">
+                    <input type="hidden" name="low_note" value="">
+                    <input type="hidden" name="high_note" value="">
+
+                    <button type="submit" class="btn btn-default" id="submit" type="submit">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
+                    <a href="{{ url_for('showCatalog') }}">
+                        <button class="btn btn-default delete">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
