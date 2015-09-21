@@ -108,5 +108,6 @@ label {
 
 
 .flash {
-    background: #cee5F5;
+    background: #abc;
+    border: 1px solid #456;
 }

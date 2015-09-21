@@ -202,12 +202,13 @@ for inst in Inst:
     session.add(inst)
 session.commit()
 
-Inst.append(Instrument(name = "Sousaphone",
-                       description = "Goes blat.",
-                       picture = "http://www.1800usaband.com/uploads/images/23502.jpg",
-                       price = 1499,
-                       category_id = 2,
-                       user_id = 0))
+
+# Inst.append(Instrument(name = "Sousaphone",
+#                        description = "Goes blat.",
+#                        picture = "http://www.1800usaband.com/uploads/images/23502.jpg",
+#                        price = 1499,
+#                        category_id = 2,
+#                        user_id = 0))
 
 
 

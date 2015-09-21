@@ -109,7 +109,7 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 100px; height: 100px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("You are now logged in as %s" % login_session['username'])
     print "done!"
     return output
 
@@ -187,7 +187,7 @@ def newInstrument(category_id):
 
         session.add(newInstrument)
         session.commit()
-        flash(request.form['name'] + " has been edited.")
+        flash(request.form['name'] + " has been added.")
         return redirect(url_for('showCategory', category_id=request.form['category_id']))
     else:
         categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -201,7 +201,6 @@ def editInstrument(category_id, instrument_id):
     editedItem = session.query(Instrument).filter_by(id=instrument_id).one()
     if 'user_id' not in login_session or editedItem.user_id != login_session['user_id']:
         return redirect('/login')
-    print editedItem.user_id, login_session['user_id']
 
     if request.method == 'POST':
         for key in request.form.keys():

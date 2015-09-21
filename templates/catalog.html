@@ -22,7 +22,7 @@
 </div>
 <div class="latest_instruments">
     <a href="{{ url_for('newInstrument', category_id=1) }}">Add an instrument</a>
-    <p>Latest Instruments:</p>
+    <h3>Latest Instruments:</h3>
     {% for inst in latest %}
         <a href="{{ url_for('showInstrument', instrument_id=inst.id) }}">{{inst.name}}</a>
         <br/>
