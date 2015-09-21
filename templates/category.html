@@ -1,6 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
+<h1>Udacious Musical Instruments</h1>
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -23,9 +24,9 @@
 {% for i in instruments %}
 <div class="instrument">
     <div class="instrument_pic_wrap">
-        <img src="{{ i.picture }}" class="instrument_pic">
+        <a href="{{ url_for('showInstrument', instrument_id=i.id) }}"><img src="{{ i.picture }}" class="instrument_pic"></a>
     </div><div class="instrument_info">
-        <h3>{{ i.name }}</h3>
+        <h3><a href="{{ url_for('showInstrument', instrument_id=i.id) }}">{{ i.name }}</a></h3>
         <p>{{ i.description }}</p>
         <p class="menu-price">${{ i.price }}</p>
         {% if current_user.id == i.user_id %}

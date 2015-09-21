@@ -15,7 +15,7 @@
 {% endif %}
 {% endwith %}
 
-
+<a href="{{ url_for('showCategory', category_id=category.id) }}">Back to {{ category.name }} Instruments</a>
 <div class="instrument_feature">
     <div class="instrument_pic_wrap_feature">
         <img src="{{ instrument.picture }}" class="instrument_pic_feature">

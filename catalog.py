@@ -170,7 +170,9 @@ def showCategory(category_id):
 @app.route('/instrument/<int:instrument_id>/')
 def showInstrument(instrument_id):
     instrument = session.query(Instrument).filter_by(id=instrument_id).one()
-    return render_template('instrument.html', instrument=instrument, current_user=getCurrentUser())
+    category = session.query(Category).filter_by(id=instrument.category_id).one()
+    return render_template('instrument.html', instrument=instrument, 
+                            category=category, current_user=getCurrentUser())
 
 
 @app.route('/catalog/<int:category_id>/new/', methods=['GET', 'POST'])
