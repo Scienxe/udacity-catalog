@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<h1>Udacious Musical Instruments</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class='flash'>
+    <ul>
+        {% for message in messages %}
+        <li><strong>{{ message }}</strong></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+
+
+<div class="instrument_feature">
+    <div class="instrument_pic_wrap_feature">
+        <img src="{{ instrument.picture }}" class="instrument_pic_feature">
+    </div><div class="instrument_info_feature">
+        <h3>{{ instrument.name }}</h3>
+        <p>{{ instrument.description }}</p>
+        <p>${{ instrument.price }}</p>
+        {% if current_user.id == instrument.user_id %}
+        <a href="{{ url_for('editInstrument', category_id = instrument.category_id, instrument_id=instrument.id ) }}">Edit</a> | 
+        <a href="{{ url_for('deleteInstrument', category_id = instrument.category_id, instrument_id=instrument.id ) }}">Delete</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

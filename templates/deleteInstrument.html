@@ -1,0 +1,16 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<h1>Udacious Musical Instruments</h1>
+
+<h2> Are you sure you want to delete {{instrument.name}}? </h2>
+
+<form action="#" method = 'post'>
+    <button type="submit" id="submit" type="submit">Delete</button>
+</form>
+
+<a href = '{{url_for('showCategory', category_id=instrument.category_id)}}'>
+    <button class="btn btn-default">Cancel</button>
+</a>
+
+{% endblock %}

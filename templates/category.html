@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class='flash'>
+    <ul>
+        {% for message in messages %}
+        <li><strong>{{ message }}</strong></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+
+<h2>{{ category.name }} Instruments</h2>
+{% if current_user.name != "Guest" %}
+<div class="addInstrument">
+    <a href="{{ url_for('newInstrument', category_id=category.id) }}">Add an instrument</a>
+</div>
+{% endif %}
+{% for i in instruments %}
+<div class="instrument">
+    <div class="instrument_pic_wrap">
+        <img src="{{ i.picture }}" class="instrument_pic">
+    </div><div class="instrument_info">
+        <h3>{{ i.name }}</h3>
+        <p>{{ i.description }}</p>
+        <p class="menu-price">${{ i.price }}</p>
+        {% if current_user.id == i.user_id %}
+        <a href="{{ url_for('editInstrument', category_id = category.id, instrument_id=i.id ) }}">Edit</a> | 
+        <a href="{{ url_for('deleteInstrument', category_id = category.id, instrument_id=i.id ) }}">Delete</a>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
