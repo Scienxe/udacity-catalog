@@ -123,4 +123,5 @@ button:hover {
 .flash {
     background: #abc;
     border: 1px solid #456;
+    margin-bottom: 10px;
 }

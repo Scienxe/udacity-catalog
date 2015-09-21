@@ -125,6 +125,21 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+    # In the Udacity examples given during the Auth & Auth course,
+    # login_session values were deleted after receiving confirmation of logout
+    # from Google. Judging by the number of threads in the forum, there is an
+    # ongoing issue with Google returning failure, even though the access_token
+    # is revoked. This results in the user remaining logged into the catalog,
+    # even though the access_token was revoked. Deleting these values 
+    # regardless of Google's response logs the user out of the catalog so no 
+    # more administrative actions are possible.
+    del login_session['credentials']
+    del login_session['gplus_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']
+    del login_session['user_id']
+
     access_token = credentials
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
@@ -132,20 +147,14 @@ def gdisconnect():
 
     if result['status'] == '200':
         # Success: revoked user's oauth token
-
-        del login_session['credentials']
-        del login_session['gplus_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
-
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return redirect(url_for('showCatalog'))
     else:
         # Failed to log out
+        # Sometimes fail to get '200' status even though token was revoked
         response = make_response(
-            json.dumps('Failed to revoke token for given user.', 400))
+            json.dumps('Logout failure.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -229,14 +238,19 @@ def deleteInstrument(category_id, instrument_id):
     if 'user_id' not in login_session or deletedItem.user_id != getCurrentUser().id:
         return redirect('/login')
 
-    if request.method == 'POST':
+    # CSRF protection for instrument deletion operates by storing the result of 
+    # generate_csrf_token() and matching it against that in the POST request. 
+    # SeaSurf would be better, but I'd like to have this run on the standard
+    # Udacity vagrant box without having to install extras.
+    if request.method == 'POST' and request.form['csrf_token'] == login_session.pop('csrf_token', None):
         session.delete(deletedItem)
         session.commit()
         flash(deletedItem.name + " has been deleted.")
         return redirect(url_for('showCategory', category_id=category_id))
     else:
         return render_template('deleteInstrument.html', category_id=category_id, 
-                                instrument=deletedItem, current_user=getCurrentUser())
+                                instrument=deletedItem, current_user=getCurrentUser(),
+                                csrf_token = generate_csrf_token())
 
 
 @app.route('/catalog/JSON')
@@ -255,20 +269,6 @@ def instrumentsJSON(category_id):
 def instrumentJSON(instrument_id):
     instrument = session.query(Instrument).filter_by(id=instrument_id).one()
     return jsonify(Instrument=instrument.serialize)
-
-
-@app.route('/showUsers/')
-def showUsers():
-    users = session.query(User).all()
-    output = [x.name for x in users]
-    return str(output)
-
-
-@app.route('/showAll')
-def showAllInstruments():
-    inst = session.query(Instrument).all()
-    output = [x.user_id for x in inst]
-    return str(output)
 
 
 def createUser(login_session):
@@ -302,11 +302,38 @@ def getCurrentUser():
 
 
 def getLatestInstruments():
-    return session.query(Instrument).order_by(Instrument.id.desc()).limit(3)
+    latest = session.query(Instrument).order_by(Instrument.id.desc()).limit(5)
+    latest_with_cats = []
+    for inst in latest:
+        cat = session.query(Category).filter_by(id=inst.category_id).one()
+        latest_with_cats.append({ "id": inst.id, "name": inst.name, "category_name": cat.name })
+    return latest_with_cats
+
+
+def generate_csrf_token():
+    if 'csrf_token' not in login_session:
+        login_session['csrf_token'] = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    return login_session['csrf_token']
+
+
+
+# Troubleshooting functions
+@app.route('/showUsers/')
+def showUsers():
+    users = session.query(User).all()
+    output = [x.name for x in users]
+    return str(output)
+
+
+@app.route('/showAll')
+def showAllInstruments():
+    inst = session.query(Instrument).all()
+    output = [x.user_id for x in inst]
+    return str(output)
 
 
 if __name__ == '__main__':
-    app.secret_key = "make_more_secreter"
+    app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
 
