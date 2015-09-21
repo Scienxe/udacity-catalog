@@ -11,7 +11,7 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 import requests
-import random, string
+import random, hashlib
 
 
 app = Flask(__name__)
@@ -25,10 +25,9 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-
 @app.route('/login')
 def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    state = hashlib.sha256( str(random.getrandbits(256))).hexdigest()
     login_session['state'] = state
     return render_template('login.html', state=state)
 
@@ -202,6 +201,9 @@ def newInstrument(category_id):
         return redirect(url_for('showCategory', category_id=request.form['category_id']))
     else:
         categories = session.query(Category).order_by(Category.name.asc()).all()
+        # 'new' uses the editInstrument template, since 'new' and 'edit' both require
+        # the same fields. The template figures out how to display itself based on
+        # whether it receives an Instrument with id != None
         return render_template('editInstrument.html', categories=categories,
                                 instrument=Instrument(id=None, category_id=category_id), 
                                 current_user=getCurrentUser())
@@ -227,9 +229,8 @@ def editInstrument(category_id, instrument_id):
         return redirect(url_for('showCategory', category_id=category_id))
     else:
         categories = session.query(Category).order_by(Category.name.asc()).all()
-        return render_template('editInstrument.html', categories=categories, category_id=category_id, 
-                                instrument=editedItem, item=editedItem, 
-                                current_user=getCurrentUser())
+        return render_template('editInstrument.html', categories=categories,
+                                instrument=editedItem, current_user=getCurrentUser())
 
 
 @app.route('/catalog/<int:category_id>/delete/<int:instrument_id>/', methods=['GET', 'POST'])
@@ -312,28 +313,12 @@ def getLatestInstruments():
 
 def generate_csrf_token():
     if 'csrf_token' not in login_session:
-        login_session['csrf_token'] = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+        login_session['csrf_token'] = hashlib.sha256( str(random.getrandbits(256))).hexdigest()
     return login_session['csrf_token']
 
 
-
-# Troubleshooting functions
-@app.route('/showUsers/')
-def showUsers():
-    users = session.query(User).all()
-    output = [x.name for x in users]
-    return str(output)
-
-
-@app.route('/showAll')
-def showAllInstruments():
-    inst = session.query(Instrument).all()
-    output = [x.user_id for x in inst]
-    return str(output)
-
-
 if __name__ == '__main__':
-    app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    app.secret_key = hashlib.sha256( str(random.getrandbits(256))).hexdigest()
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
 
