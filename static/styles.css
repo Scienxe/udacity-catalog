@@ -1,38 +1,112 @@
-body { 
+body {
+    max-width: 800px;
+    margin: 0px auto;
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
     background-color: #fff
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
 }
 h1, h2, h3, h4 { 
     color: #456; 
 }
-h1, h2 { 
-    font-family: 'Georgia', serif; 
-    margin: 0; 
-}
+
 h1 { 
-    border-bottom: 2px solid #eee; 
+    border-bottom: 1px dotted #333; 
 }
 h2 { 
     font-size: 1.2em; 
 }
 
-p, dd, dt { 
-    color: #CCCCCC;
+
+p { 
+    color: #333;
 }
 
 a {
     text-decoration: none; 
-    color:#FFFFCC; 
-    font-size: .75em;
+    color: #678; 
+}
+label {
+    display: block;
+    margin-top: 10px;
 }
 
-.pane {position:absolute; left: 25%; border: 2px solid;
-    border-radius: 25px; padding: 5px; margin: 5px; border-color: #999999; background-color: #333333 }
-.header         {left:50%; text-align: center;}
-.name {width:50%;display: inline-block; float: left;}
-.description {}
-.price {text-align: right; width:50%; float: right; }
-.editdeletepane{}
+.header_home {
+    display: inline-block;
+    width: 50%;
+}
+.header_welcome {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+}
 
-.flash          { background: #cee5F5; }
+.category_list {
+    display: inline-block;
+    vertical-align: top;
+    padding-right: 10px;
+    border-right: 1px dotted #333;
+}
+.latest_instruments {
+    display: inline-block;
+    vertical-align: top;
+    max-width: 550px;
+    padding-left: 10px;
+}
+.category_link {
+    display: block;
+    font-size: 1.5em;
+}
+
+.instrument {
+    border-top: 1px dotted #333;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.instrument_pic_wrap {
+    display: inline-block;
+    width: 200px;
+    text-align: center;
+    vertical-align: top;
+}
+.instrument_pic {
+    max-width: 200px;
+    max-height: 150px;
+
+}
+.instrument_info {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 1em;
+    max-width: 550px;
+}
+.instrument_feature {
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+.instrument_pic_wrap_feature {
+    display: inline-block;
+    width: 400px;
+    text-align: center;
+    vertical-align: top;
+}
+.instrument_pic_feature {
+    max-width: 400px;
+    max-height: 300px;
+
+}
+.instrument_info_feature {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 1em;
+    max-width: 350px;
+}
+
+
+.flash {
+    background: #cee5F5;
+}

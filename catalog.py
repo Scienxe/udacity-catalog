@@ -155,24 +155,26 @@ def gdisconnect():
 def showCatalog():
     categories = session.query(Category).order_by(Category.name.asc()).all()
     return render_template('catalog.html', categories=categories, 
-                            current_user=getCurrentUser())
+                            current_user=getCurrentUser(), latest=getLatestInstruments())
 
 
 @app.route('/catalog/<int:category_id>/')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
-    instruments = session.query(Instrument).filter_by(category_id=category_id)
-    return render_template('instruments.html', category=category, instruments=instruments, 
+    instruments = session.query(Instrument).filter_by(category_id=category_id).order_by(Instrument.name.asc())
+    return render_template('category.html', category=category, instruments=instruments, 
                             manager=getUserInfo(category.user_id), 
                             current_user=getCurrentUser())
 
 
-@app.route('/catalog/new/', methods=['GET', 'POST'])
-def newInstrument():
-    pass
+@app.route('/instrument/<int:instrument_id>/')
+def showInstrument(instrument_id):
+    instrument = session.query(Instrument).filter_by(id=instrument_id).one()
+    return render_template('instrument.html', instrument=instrument, current_user=getCurrentUser())
+
 
 @app.route('/catalog/<int:category_id>/new/', methods=['GET', 'POST'])
-def newInstrumentWithCategory(category_id):
+def newInstrument(category_id):
     if 'user_id' not in login_session:
         return redirect('/login')
     
@@ -180,9 +182,8 @@ def newInstrumentWithCategory(category_id):
         print request.form
         newInstrument = Instrument(name=request.form['name'], description=request.form['description'],
                                     picture=request.form['picture'], price=request.form['price'], 
-                                    low_note=request.form['low_note'], high_note=request.form['high_note'], 
                                     category_id=request.form['category_id'],
-                                    current_user=getCurrentUser())
+                                    user_id=getCurrentUser().id)
 
         session.add(newInstrument)
         session.commit()
@@ -190,8 +191,8 @@ def newInstrumentWithCategory(category_id):
         return redirect(url_for('showCategory', category_id=request.form['category_id']))
     else:
         categories = session.query(Category).order_by(Category.name.asc()).all()
-        return render_template('editInstrument.html', categories=categories, category_id=category_id, 
-                                instrument_id=None, item=None, 
+        return render_template('editInstrument.html', categories=categories,
+                                instrument=Instrument(id=None, category_id=category_id), 
                                 current_user=getCurrentUser())
 
 
@@ -208,8 +209,6 @@ def editInstrument(category_id, instrument_id):
             editedItem.description = request.form['description']
             editedItem.price = request.form['price']
             editedItem.picture = request.form['picture']
-            editedItem.low_note = request.form['low_note']
-            editedItem.high_note = request.form['high_note']
             editedItem.category_id = request.form['category_id']
 
         session.add(editedItem)
@@ -225,9 +224,10 @@ def editInstrument(category_id, instrument_id):
 
 @app.route('/catalog/<int:category_id>/delete/<int:instrument_id>/', methods=['GET', 'POST'])
 def deleteInstrument(category_id, instrument_id):
-    deletedItem = session.query(MenuItem).filter_by(id=instrument_id).one()
-    if 'user_id' not in login_session or deletedItem.user_id != login_session['user_id']:
+    deletedItem = session.query(Instrument).filter_by(id=instrument_id).one()
+    if 'user_id' not in login_session or deletedItem.user_id != getCurrentUser().id:
         return redirect('/login')
+
     if request.method == 'POST':
         session.delete(deletedItem)
         session.commit()
@@ -235,29 +235,38 @@ def deleteInstrument(category_id, instrument_id):
         return redirect(url_for('showCategory', category_id=category_id))
     else:
         return render_template('deleteInstrument.html', category_id=category_id, 
-                                instrument_id=instrument_id, item=deletedItem, 
-                                current_user=getCurrentUser())
+                                instrument=deletedItem, current_user=getCurrentUser())
 
 
+@app.route('/catalog/JSON')
+def categoriesJSON():
+    categories = session.query(Category).order_by(Category.name.asc()).all()
+    return jsonify(Categories=[i.serialize for i in categories])
 
 
-@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
-def restaurantMenuJSON(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id).all()
-    return jsonify(MenuItems=[i.serialize for i in items])
+@app.route('/catalog/<int:category_id>/JSON')
+def instrumentsJSON(category_id):
+    instruments = session.query(Instrument).filter_by(category_id=category_id).order_by(Instrument.name.asc()).all()
+    return jsonify(Instruments=[i.serialize for i in instruments])
 
 
-@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-def menuItemJSON(restaurant_id, menu_id):
-    item = session.query(MenuItem).filter_by(id=menu_id).one()
-    return jsonify(MenuItem=item.serialize)
+@app.route('/instrument/<int:instrument_id>/JSON')
+def instrumentJSON(instrument_id):
+    instrument = session.query(Instrument).filter_by(id=instrument_id).one()
+    return jsonify(Instrument=instrument.serialize)
 
 
 @app.route('/showUsers/')
 def showUsers():
     users = session.query(User).all()
     output = [x.name for x in users]
+    return str(output)
+
+
+@app.route('/showAll')
+def showAllInstruments():
+    inst = session.query(Instrument).all()
+    output = [x.user_id for x in inst]
     return str(output)
 
 
@@ -289,6 +298,11 @@ def getCurrentUser():
         return getUserInfo(login_session['user_id'])
     else:
         return User(name="Guest", id=0)
+
+
+def getLatestInstruments():
+    return session.query(Instrument).order_by(Instrument.id.desc()).limit(3)
+
 
 if __name__ == '__main__':
     app.secret_key = "make_more_secreter"

@@ -45,8 +45,6 @@ class Instrument(Base):
     description = Column(String(250))
     picture = Column(String(250))
     price = Column(Integer)  # probably a Float in real life, but we'll go with even dollars
-    low_note = Column(String(4))
-    high_note = Column(String(4))
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -60,8 +58,7 @@ class Instrument(Base):
             "description": self.description,
             "id": self.id,
             "price": self.price,
-            "low_note": self.low_note,
-            "high_note": self.high_note
+            "category_id": self.category_id
         }
 
 engine = create_engine('sqlite:///musicalinstruments.db')
