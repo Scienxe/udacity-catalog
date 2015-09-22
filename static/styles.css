@@ -12,19 +12,15 @@ body {
 h1, h2, h3, h4 { 
     color: #456; 
 }
-
 h1 { 
     border-bottom: 1px dotted #333; 
 }
 h2 { 
     font-size: 1.2em; 
 }
-
-
 p { 
     color: #333;
 }
-
 a {
     text-decoration: none; 
     color: #678; 
@@ -46,7 +42,6 @@ button:hover {
     text-shadow: 1px 1px #000;
 }
 
-
 .header_home {
     display: inline-block;
     width: 50%;
@@ -63,15 +58,15 @@ button:hover {
     padding-right: 10px;
     border-right: 1px dotted #333;
 }
+.category_link {
+    display: block;
+    font-size: 1.5em;
+}
 .latest_instruments {
     display: inline-block;
     vertical-align: top;
     max-width: 550px;
     padding-left: 10px;
-}
-.category_link {
-    display: block;
-    font-size: 1.5em;
 }
 
 .instrument {
@@ -119,7 +114,10 @@ button:hover {
     max-width: 350px;
 }
 
-
+.required {
+    color: #f00;
+    display: none;
+}
 .flash {
     background: #abc;
     border: 1px solid #456;

@@ -6,6 +6,7 @@
 <h2> Are you sure you want to delete {{instrument.name}}? </h2>
 
 <form action="#" method = 'post'>
+    <!-- see catalog.py for discussion of csrf token -->
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <button type="submit" id="submit" type="submit">Delete</button>
     <a href = '{{url_for('showCategory', category_id=instrument.category_id)}}'>Cancel</a>

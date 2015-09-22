@@ -1,15 +1,29 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
+<script>
+function validate() {
+    var theForm = document.getElementById('addInst');
+    if (theForm.category_id.value == 0) {
+        document.getElementById('categoryRequired').style.display = 'inline';
+        return false;
+    }
+    if (theForm.name.value == "") {
+        document.getElementById('nameRequired').style.display = 'inline';
+        return false;
+    }
+    return true;
+}
+</script>
 <div>
     <h1>{% if instrument.id == None %}New{% else %}Edit{% endif %} Instrument</h1>
 </div>
 
 <div>
     {% if instrument.id == None %}
-    <form action="{{ url_for('newInstrument', category_id=instrument.category_id) }}" method="post">
+    <form action="{{ url_for('newInstrument', category_id=instrument.category_id) }}" id="addInst" method="post" onsubmit="event.preventDefault(); return validate();">
     {% else %}
-    <form action="{{ url_for('editInstrument', category_id=instrument.category_id, instrument_id=instrument.id) }}" method = "post">
+    <form action="{{ url_for('editInstrument', category_id=instrument.category_id, instrument_id=instrument.id) }}" id="addInst" method = "post" onsubmit="event.preventDefault(); return validate();">
     {% endif %}
         <label for="category">Category:</label>
         <select name="category_id">
@@ -18,20 +32,27 @@
             <option value="{{ cat.id }}"{% if instrument and instrument.category_id == cat.id %} selected{% endif %}>{{cat.name}}</option>
             {% endfor %}
         </select>
+        <span id="categoryRequired" class="required">*</span>
         <br/>
+
         <label for="name">Name:</label>
         <input type ="text" maxlength="100" class="form-control" name="name" {% if instrument.name != None %}value="{{ instrument.name }}"{% else %}placeholder="Enter name"{% endif %}>
+        <span id="nameRequired" class="required">*</span>
         <br/>
+
         <label for="description">Description:</label>
         <textarea class="form-control" maxlength="250" rows="3" name="description">{% if instrument.name != None %}{{ instrument.description }}{% endif %}</textarea>
         <br/>
+
         <label for="price">Price:</label>
         $ <input type ="text" maxlength="10" class="form-control" name="price" {% if instrument.name != None %}value="{{ instrument.price }}"{% else %}placeholder="Enter price"{% endif %} size="10">
         <br/>
+
         <label for="picture">Picture URL:</label>
         <input type="text" name="picture" {% if instrument.name != None %}value="{{ instrument.picture }}"{% else %}placeholder="Enter URL"{% endif %} size="50">
         <br/>
         <br/>
+
         <button type="submit" id="submit" type="submit">Save</button>
         <a href="{{ url_for('showCatalog') }}">Cancel</a>
     </form>

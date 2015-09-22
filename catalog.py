@@ -254,6 +254,8 @@ def deleteInstrument(category_id, instrument_id):
                                 csrf_token = generate_csrf_token())
 
 
+# JSON endpoints:
+
 @app.route('/catalog/JSON')
 def categoriesJSON():
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -271,6 +273,9 @@ def instrumentJSON(instrument_id):
     instrument = session.query(Instrument).filter_by(id=instrument_id).one()
     return jsonify(Instrument=instrument.serialize)
 
+# End URL routing
+
+# Helper functions:
 
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session['email'], 
@@ -318,7 +323,7 @@ def generate_csrf_token():
 
 
 if __name__ == '__main__':
-    app.secret_key = hashlib.sha256( str(random.getrandbits(256))).hexdigest()
+    app.secret_key = 'dd1916dc739164ddb146e188575ed0a5f6c3c024d740e9e6d4dd5dc721f91799'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
 
