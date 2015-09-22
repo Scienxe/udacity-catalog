@@ -11,6 +11,7 @@ The environment is assumed to be the standard Vagrant box distributed by Udacity
 includes Python, Flask, and noSQL.
 
 Steps to start the catalog:
+
 1. Clone the directory heirarchy in this repo.
 2. Set up OAUTH2 for a new web app at https://console.developers.google.com .
 3. Obtain a client_secrets.json file for the new web app and put it in the same
