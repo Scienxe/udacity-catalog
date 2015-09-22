@@ -26,7 +26,7 @@ function validate(form) {
     <form action="{{ url_for('editInstrument', category_id=instrument.category_id, instrument_id=instrument.id) }}" id="addInst" method = "post" onsubmit="return validate(this);">
     {% endif %}
         <label for="category">Category:</label>
-        <select name="category_id">
+        <select name="category_id" id="category_id">
             <option value="0">-- Select a category --</option>
             {% for cat in categories %}
             <option value="{{ cat.id }}"{% if instrument and instrument.category_id == cat.id %} selected{% endif %}>{{cat.name}}</option>
@@ -36,20 +36,20 @@ function validate(form) {
         <br/>
 
         <label for="name">Name:</label>
-        <input type ="text" maxlength="100" class="form-control" name="name" {% if instrument.name != None %}value="{{ instrument.name }}"{% else %}placeholder="Enter name"{% endif %}>
+        <input type ="text" maxlength="100" class="form-control" name="name" id="name" {% if instrument.name != None %}value="{{ instrument.name }}"{% else %}placeholder="Enter name"{% endif %}>
         <span id="nameRequired" class="required">*</span>
         <br/>
 
         <label for="description">Description:</label>
-        <textarea class="form-control" maxlength="250" rows="3" name="description">{% if instrument.name != None %}{{ instrument.description }}{% endif %}</textarea>
+        <textarea class="form-control" maxlength="250" rows="3" name="description" id="description">{% if instrument.name != None %}{{ instrument.description }}{% endif %}</textarea>
         <br/>
 
         <label for="price">Price:</label>
-        $ <input type ="text" maxlength="10" class="form-control" name="price" {% if instrument.name != None %}value="{{ instrument.price }}"{% else %}placeholder="Enter price"{% endif %} size="10">
+        $ <input type ="text" maxlength="10" class="form-control" name="price" id="price" {% if instrument.name != None %}value="{{ instrument.price }}"{% else %}placeholder="Enter price"{% endif %} size="10">
         <br/>
 
         <label for="picture">Picture URL:</label>
-        <input type="text" name="picture" {% if instrument.name != None %}value="{{ instrument.picture }}"{% else %}placeholder="Enter URL"{% endif %} size="50">
+        <input type="text" name="picture" id="picture" {% if instrument.name != None %}value="{{ instrument.picture }}"{% else %}placeholder="Enter URL"{% endif %} size="50">
         <br/>
         <br/>
 

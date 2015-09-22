@@ -5,10 +5,25 @@
 
 <h1>Udacious Musical Instruments</h1>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class='flash'>
+    <ul>
+        {% for message in messages %}
+        <li><strong>{{ message }}</strong></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+
 <div><p>Please login to add or edit instruments.</p></div>
 <div id="signinButton">
 <span class="g-signin" data-scope="openid email" 
-    data-clientid="261720561755-uva8vogggmsr3ha5tkt5ufrbqifl6ho0.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback" data-approvalprompt="force"></span>
+    data-clientid="261720561755-uva8vogggmsr3ha5tkt5ufrbqifl6ho0.apps.googleusercontent.com" 
+    data-redirecturi="postmessage" data-accesstype="offline" 
+    data-cookiepolicy="single_host_origin" data-callback="signInCallback" 
+    data-approvalprompt="force"></span>
 </div>
 <div id="result">
 </div>

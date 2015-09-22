@@ -17,12 +17,14 @@ Steps to start the catalog:
 3. Obtain a client_secrets.json file for the new web app and put it in the same
 directory as catalog.py. [Note: in real app deployments, client_secrets.json should not be 
 in a location accessible to the outside world.]
-4. In the directory where catalog.py lives, run the following at a command prompt:
+4. In templates/login.html, change the data-clientid value on line 11 to the one
+obtained from Step 2 above.
+5. In the directory where catalog.py lives, run the following at a command prompt:
 
         $ python database_setup.py
         $ python database_populate.py
         $ python catalog.py
-5. Point a browser at http://localhost:8000/
+6. Point a browser at http://localhost:8000/
 
 ## Features
 OAUTH2 login is provided through Google. Facebook login is not supported because 
