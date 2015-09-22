@@ -31,5 +31,7 @@ Facebook has repeatedly proven it can't be trusted with users' privacy.
 
 Logged-in users can add instruments from either the front page or any category page.
 Users can edit and/or delete instruments they added, but not those added by others.
+The new/edit form checks that the required fields (category and name) have values.
+
 The add, edit, and delete links are hidden from visitors who are not logged in.
 

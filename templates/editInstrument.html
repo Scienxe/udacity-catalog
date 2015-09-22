@@ -2,13 +2,13 @@
 {% block content %}
 {% include "header.html" %}
 <script>
-function validate() {
-    var theForm = document.getElementById('addInst');
-    if (theForm.category_id.value == 0) {
+function validate(form) {
+    //var theForm = document.getElementById('addInst');
+    if (form.category_id.value == 0) {
         document.getElementById('categoryRequired').style.display = 'inline';
         return false;
     }
-    if (theForm.name.value == "") {
+    if (form.name.value == "") {
         document.getElementById('nameRequired').style.display = 'inline';
         return false;
     }
@@ -21,9 +21,9 @@ function validate() {
 
 <div>
     {% if instrument.id == None %}
-    <form action="{{ url_for('newInstrument', category_id=instrument.category_id) }}" id="addInst" method="post" onsubmit="event.preventDefault(); return validate();">
+    <form action="{{ url_for('newInstrument', category_id=instrument.category_id) }}" id="addInst" method="post" onsubmit="return validate(this);">
     {% else %}
-    <form action="{{ url_for('editInstrument', category_id=instrument.category_id, instrument_id=instrument.id) }}" id="addInst" method = "post" onsubmit="event.preventDefault(); return validate();">
+    <form action="{{ url_for('editInstrument', category_id=instrument.category_id, instrument_id=instrument.id) }}" id="addInst" method = "post" onsubmit="return validate(this);">
     {% endif %}
         <label for="category">Category:</label>
         <select name="category_id">
