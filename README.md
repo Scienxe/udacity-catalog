@@ -1,5 +1,4 @@
 # udacity-catalog
-
 This is a musical instrument catalog for the Udacity Full Stack Web
 Developer Nanodegree.
 
@@ -8,7 +7,6 @@ Two extra credit features are implemented:
 * Minimal CSRF protection is implemented to prevent fraudulent deletion of items.
 
 ## How-to
-
 The environment is assumed to be the standard Vagrant box distributed by Udacity, which
 includes Python, Flask, and noSQL.
 
@@ -35,3 +33,6 @@ The new/edit form checks that the required fields (category and name) have value
 
 The add, edit, and delete links are hidden from visitors who are not logged in.
 
+## Legal
+All images in this project are used without permission. Fair use is claimed due to 
+the educational nature of the project. 
